@@ -5,9 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-defaults:
-  run:
-    working-directory: WebServer
+
 jobs:
   release:
     name: Release
@@ -28,8 +26,7 @@ jobs:
       #run: npm run lint-fix
       
     - name: Build
-
-      run: quasar build      
+      run: npm run build      
     - name: Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
