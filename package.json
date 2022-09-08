@@ -1,6 +1,6 @@
 {
   "name": "astrosync",
-  "version": "1.0.0-semantic-release",
+  "version": "1.0.2",
   "description": "A Quasar Project",
   "productName": "AstroSync",
   "author": "crinitusfeles <crinitusfeles@gmail.com>",
