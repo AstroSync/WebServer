@@ -3,8 +3,8 @@ module.exports = {
     'main',
     {
       name: 'beta',
-      prerelease: true
-    }
+      prerelease: true,
+    },
   ],
   plugins: [
     '@semantic-release/commit-analyzer',
@@ -12,17 +12,22 @@ module.exports = {
     [
       '@semantic-release/changelog',
       {
-        changelogFile: 'CHANGELOG.md'
-      }
+        changelogFile: 'CHANGELOG.md',
+      },
     ],
     '@semantic-release/npm',
+    {
+      npmPublish: false,
+      tarballDir: 'dist',
+    },
     '@semantic-release/github',
     [
       '@semantic-release/git',
       {
-        assets: ['CHANGELOG.md', 'dist/**'],
-        message: 'chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
-      }
-    ]
-  ]
-}
+        assets: ['CHANGELOG.md', 'dist/**', 'package.json'],
+        message:
+          'chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
+      },
+    ],
+  ],
+};
