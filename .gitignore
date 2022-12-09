@@ -2,6 +2,9 @@
 .thumbs.db
 node_modules
 .env
+.history
+.vscode
+.data
 # Quasar core related directories
 .quasar
 /dist
