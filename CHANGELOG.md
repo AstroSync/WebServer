@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/AstroSync/WebServer/compare/v1.0.5...v1.0.6) (2022-09-08)
+
+
+### Bug Fixes
+
+* second semantic release ([9a7a6a6](https://github.com/AstroSync/WebServer/commit/9a7a6a6c38cb402b5154d5f3465ed4d13f71b49c))
+
 ## [1.0.5](https://github.com/AstroSync/WebServer/compare/v1.0.4...v1.0.5) (2022-09-08)
 
 
