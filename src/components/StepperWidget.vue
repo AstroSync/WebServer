@@ -86,7 +86,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { api } from 'boot/axios';
+import { api } from 'src/boot/axios';
 import { useQuasar } from 'quasar'
 import AvailableSats from 'components/tables/AvailableSats.vue';
 import SessionsTable from 'components/tables/SessionsTable.vue';
@@ -122,12 +122,12 @@ function uploadHandler() {
 
 function register_session(script) {
     api
-    .post('/register_new_session', 
+    .post('/register_new_session',
     qs.parse({
       sat_name: store.sat_name,
       session_list: store.session_list,
       user_script: script,
-    }), 
+    }),
     {
       headers: {
         'Content-Type': 'application/json'

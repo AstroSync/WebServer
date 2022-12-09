@@ -1,46 +1,47 @@
 <template>
-  <div @click="input_cmd.focus()" style="min-height: 350px;">
-    <div ref="terminal" id="container">
-      <div style="overflow: auto" id="scroll_container">
-        <div style="height: 600px">
-          <div v-if="banner" id="banner">
-            <p>
-              <img
-                v-if="banner.img"
-                :align="banner.img.align ? banner.img.align : 'left'"
-                :src="banner.img.link ? banner.img.link : '@/logo.png'"
-                :width="banner.img.width ? banner.img.width : '100px'"
-                :height="banner.img.height ? banner.img.height : '100px'"
-              />
-            </p>
-            <h3 v-if="banner.header" style="letter-spacing: 4px">
-              {{ banner.header }}
-            </h3>
-            <p v-if="banner.subHeader">{{ banner.subHeader }}</p>
-            <p v-if="banner.helpHeader">{{ banner.helpHeader }}</p>
-            <p></p>
-          </div>
-          <output ref="output"></output>
-          <div id="input-line" class="input-line">
-            <div class="prompt">
-              <div>{{ banner.sign ? banner.sign : '>>' }}</div>
-            </div>
 
-            <input
-              v-model="cmd_string"
-              ref="input_cmd"
-              @keydown.enter="cmd_enter($event)"
-              @keydown.up="history_up()"
-              @keydown.down="history_down()"
-              @keydown.tab="($event) => $event.preventDefault()"
-              class="cmdline"
-              autofocus
-            />
-          </div>
+    <div @click="input_cmd.focus()" style="min-height: 350px;">
+        <div ref="terminal" id="container">
+        <div style="overflow: auto" id="scroll_container">
+            <div style="height: 600px">
+            <div v-if="banner" id="banner">
+                <p>
+                <img
+                    v-if="banner.img"
+                    :align="banner.img.align ? banner.img.align : 'left'"
+                    :src="banner.img.link ? banner.img.link : '@/logo.png'"
+                    :width="banner.img.width ? banner.img.width : '100px'"
+                    :height="banner.img.height ? banner.img.height : '100px'"
+                />
+                </p>
+                <h3 v-if="banner.header" style="letter-spacing: 4px">
+                {{ banner.header }}
+                </h3>
+                <p v-if="banner.subHeader">{{ banner.subHeader }}</p>
+                <p v-if="banner.helpHeader">{{ banner.helpHeader }}</p>
+                <p></p>
+            </div>
+            <output ref="output"></output>
+            <div id="input-line" class="input-line">
+                <div class="prompt">
+                <div>{{ banner.sign ? banner.sign : '>>' }}</div>
+                </div>
+
+                <input
+                v-model="cmd_string"
+                ref="input_cmd"
+                @keydown.enter="cmd_enter($event)"
+                @keydown.up="history_up()"
+                @keydown.down="history_down()"
+                @keydown.tab="($event) => $event.preventDefault()"
+                class="cmdline"
+                autofocus
+                />
+            </div>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -66,7 +67,7 @@ const props = defineProps({
     required: false,
     default: () => {
       return {
-        header: 'Ground Station Shell',
+        header: 'Ground Station Shell!',
         // subHeader: 'Shell is power just enjoy 🔥',
         helpHeader: 'Enter "help" for more information.',
         sign: 'VueShell $',

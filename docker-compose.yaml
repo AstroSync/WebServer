@@ -1,0 +1,130 @@
+version: '3.8'
+services:
+  frontend:
+    image: naku_frontend:latest
+    container_name: frontend
+    build:
+      context: ./
+      dockerfile: frontend.dockerfile
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME?Variable not set}
+      DOMAIN: ${DOMAIN?Variable not set}
+      API_URL: ${API_URL?Variable not set}
+      AUTH_URL: ${AUTH_URL?Variable not set}
+      REALM: ${REALM?Variable not set}
+      CLIENT_ID: ${CLIENT_ID?Variable not set}
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.frontend.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)'
+      - 'traefik.http.routers.frontend.entrypoints=https'
+      - 'traefik.http.routers.frontend.tls.certresolver=letsEncrypt'
+      - 'traefik.http.routers.frontend.tls=true'
+
+      - 'traefik.http.routers.frontend_redirect.rule=hostregexp(`{host:.+}`)'
+      - 'traefik.http.routers.frontend_redirect.entrypoints=http'
+      - 'traefik.http.routers.frontend_redirect.middlewares=https-redirect'
+
+      - 'traefik.http.services.frontend_service.loadbalancer.server.port=80'
+      # - "traefik.http.middlewares.sslheader_front.headers.customrequestheaders.X-Forwarded-Proto = https"
+    volumes:
+      # - ./:/frontend
+      # - /frontend/node_modules
+      # - /frontend/package-lock.json
+      - ./src:/frontend/src
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRE_DB?Variable not set}
+      POSTGRES_USER: ${POSTGRE_DB_USER?Variable not set}
+      POSTGRES_PASSWORD: ${POSTGRE_DB_PASSWORD?Variable not set}
+    restart: always
+
+  keycloak:
+    image: jboss/keycloak:16.1.0
+    container_name: keycloak
+    volumes:
+      - ./realm-export.json:/opt/jboss/keycloak/imports/realm-export.json
+    command:
+      - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.import=/opt/jboss/keycloak/imports/realm-export.json'
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: ${POSTGRE_DB?Variable not set}
+      DB_USER: ${POSTGRE_DB_USER?Variable not set}
+      DB_SCHEMA: public
+      DB_PASSWORD: ${POSTGRE_DB_PASSWORD?Variable not set}
+      KEYCLOAK_USER: ${KEYCLOAK_USER?Variable not set}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD?Variable not set}
+      PROXY_ADDRESS_FORWARDING: 'true'
+      KEYCLOAK_LOGLEVEL: INFO
+    ports:
+      - '8085:8080'
+    depends_on:
+      - postgres
+    restart: always
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.keycloak.rule=Host(`${AUTH_URL?Variable not set}`)'
+      - 'traefik.http.routers.keycloak.service=keycloak'
+      - 'traefik.http.routers.keycloak.entrypoints=https'
+      - 'traefik.http.services.keycloak.loadbalancer.server.port=8085'
+      - 'traefik.http.routers.keycloak.tls=true'
+      - 'traefik.http.routers.keycloak.tls.certresolver=letsEncrypt'
+      - 'traefik.http.services.keycloak.loadbalancer.passhostheader=true'
+      - 'traefik.http.routers.keycloak.middlewares=compresstraefik'
+      - 'traefik.http.middlewares.compresstraefik.compress=true'
+  traefik:
+    image: traefik:v2.8
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/acme.json:/acme.json
+      # - ./:/etc/traefik
+    depends_on:
+      - 'frontend'
+      - 'keycloak'
+
+    command:
+      # - "--api.insecure=true"
+      - '--api.dashboard=true'
+      - '--api.debug=true'
+      - '--providers.docker=true'
+      - '--log.LEVEL=INFO'
+      - '--entryPoints.http.address=:80'
+      - '--entryPoints.https.address=:443'
+      - '--entryPoints.smtp.address=:25'
+      - '--entryPoints.smtp-ssl.address=:465'
+      - '--entryPoints.imap-ssl.address=:993'
+      - '--entryPoints.sieve.address=:4190'
+      - '--providers.docker.exposedbydefault=false'
+      - '--certificatesresolvers.letsEncrypt.acme.httpchallenge=true'
+      - '--certificatesresolvers.letsEncrypt.acme.httpchallenge.entrypoint=http'
+      - '--certificatesresolvers.letsEncrypt.acme.email=${TRAEFIC_EMAIL?Variable not set}'
+      - '--certificatesresolvers.letsEncrypt.acme.storage=acme.json'
+
+    labels:
+      # dashboard
+      - 'traefik.enable=true'
+      # - "traefik.docker.network=traefik-public"
+      - 'traefik.http.routers.traefik.entrypoints=https'
+      - 'traefik.http.routers.traefik.rule=Host(`${DASHBOARD_URL?Variable not set}`)'
+      - 'traefik.http.routers.traefik.tls=true'
+      - 'traefik.http.routers.traefik.tls.certresolver=letsEncrypt'
+      - 'traefik.http.routers.traefik.service=api@internal'
+      # - "traefik.http.services.traefik-traefik.loadbalancer.server.port=888"
+      # - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$CvFeOdaS$EIEsJ5YejQGZ5hmCQqKcz0"
+      # - "traefik.http.routers.traefik.middlewares=traefik-auth"
+
+      - 'traefik.http.middlewares.https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.middlewares.https-redirect.redirectscheme.permanent=true'
+
+      - 'traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https'

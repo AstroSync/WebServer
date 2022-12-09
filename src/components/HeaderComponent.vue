@@ -10,7 +10,7 @@
         icon="menu"
       />
 
-      <q-btn flat no-caps no-wrap> 
+      <q-btn flat no-caps no-wrap>
         <!-- <q-icon :name="fabYoutube" color="red" size="28px" /> -->
         <q-toolbar-title shrink>
           <!-- <q-icon class="text-dark" size="lg"> -->
@@ -75,7 +75,7 @@
             <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar>
           <div v-if="$q.screen.gt.xs">
-          {{ username }} 
+          {{ username }}
           </div>
           <q-icon name="arrow_drop_down" size="16px" />
 
@@ -113,7 +113,7 @@
 <script setup>
 import { ref } from 'vue';
 import { onMounted } from 'vue';
-import { keycloak } from 'boot/keycloak';
+import { keycloak } from 'src/boot/keycloak';
 import { useUserProfileStore } from 'stores/user-profile-store';
 import { useQuasar } from 'quasar';
 const store = useUserProfileStore();

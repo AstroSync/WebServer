@@ -7,6 +7,7 @@ import axios from 'axios';
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({ baseURL: `https://${process.env.API_URL}` });
+// const api = axios.create({ baseURL: 'https://api.astrosync.ru' });
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api

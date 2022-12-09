@@ -2,9 +2,12 @@ import { boot } from 'quasar/wrappers';
 import Keycloak from 'keycloak-js';
 
 const keycloak = Keycloak({
-  url: `https://${process.env.AUTH_URL}/auth`,
-  realm: process.env.REALM,
-  clientId: process.env.CLIENT_ID,
+  //   url: `https://${process.env.AUTH_URL}/auth`,
+  //   realm: process.env.REALM,
+  //   clientId: process.env.CLIENT_ID,
+  url: 'http://localhost:8085/auth',
+  realm: 'Test',
+  clientId: 'test-client',
 });
 
 export default boot(({ app /* , store } */ }) => {

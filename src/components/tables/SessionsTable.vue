@@ -24,7 +24,7 @@
           </q-badge>
         </q-td>
         <q-td key="start_time" :props="props">
-          {{ props.row.start_time }}
+          {{ props.row.start_time}}
         </q-td>
         <q-td key="finish_time" :props="props">
           {{ props.row.finish_time }}
@@ -32,9 +32,9 @@
         <q-td key="duration" :props="props">
           {{ props.row.duration_sec }}
         </q-td>
-        <q-td key="station" :props="props">
+        <!-- <q-td key="station" :props="props">
           {{ props.row.station }}
-        </q-td>
+        </q-td> -->
       </q-tr>
     </template>
     <template v-slot:top-right>
@@ -82,10 +82,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { api } from 'boot/axios';
+import { api } from 'src/boot/axios';
 import { date } from 'quasar';
 import { useRegisterSessionStore } from 'stores/register-session-store';
-import { keycloak } from 'boot/keycloak';
+import { keycloak } from 'src/boot/keycloak';
 const store = useRegisterSessionStore();
 const date_format = ref('YYYY-MM-DD');
 // const date_format = ref('DD.MM.YYYY');
@@ -188,13 +188,13 @@ const columns = ref([
     field: 'duration_sec',
     sortable: true,
   },
-  {
-    name: 'station',
-    align: 'center',
-    label: 'Station',
-    field: 'station',
-    sortable: true,
-  },
+//   {
+//     name: 'station',
+//     align: 'center',
+//     label: 'Station',
+//     field: 'station',
+//     sortable: true,
+//   },
 ]);
 </script>
 

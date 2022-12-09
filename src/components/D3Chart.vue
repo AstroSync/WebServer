@@ -1,8 +1,8 @@
-<template>
+<!-- <template>
  <div class="q-pa-md">
-   <q-select outlined v-model="model" 
-   :options="projectionTypes" 
-   label="Projection"    
+   <q-select outlined v-model="model"
+   :options="projectionTypes"
+   label="Projection"
    @update:model-value="(val) => update_projection(val)"/>
   <svg class="chart" style="width: 700px; height: 900px;">
     <g class="graticule"><path></path></g>
@@ -61,7 +61,7 @@ let graticule = d3.geoGraticule();
 //   state.value.translateX += e.dx;
 //   state.value.translateY += e.dy;
 //   // projection
-//   //   .translate([e.x, e.y])  
+//   //   .translate([e.x, e.y])
 
 //   update();
 // }
@@ -77,7 +77,7 @@ function update() {
 
   projection.value
     .scale(state.value.scale)
-    .translate([state.value.translateX, state.value.translateY])  
+    .translate([state.value.translateX, state.value.translateY])
     .center([state.value.centerLon, state.value.centerLat])
     .rotate([state.value.rotateLambda, state.value.rotatePhi, state.value.rotateGamma])
   // d3.select('.chart')
@@ -91,11 +91,11 @@ function update() {
     //     state.value.translateX += e.x;
     //     state.value.translateY += e.y;
     //     console.log([e.x, e.y])
-    //     projection.value.translate([state.value.translateX, state.value.translateY])  
+    //     projection.value.translate([state.value.translateX, state.value.translateY])
     //     geoGenerator.projection(projection.value);
     //   }))
     .attr('d', geoGenerator);
-  
+
 
   d3.select('.graticule path')
     .datum(graticule())
@@ -116,7 +116,7 @@ onMounted(() => {
 
 function drag() {
   let v0, q0, r0, a0, l;
-  
+
   function pointer(event, that) {
     const t = d3.pointers(event, that);
 
@@ -138,7 +138,7 @@ function drag() {
   }
 
   function dragstarted(event) {
-    
+
     v0 = versor.cartesian(projection.value.invert(pointer(event, this)));
     q0 = versor(r0 = projection.value.rotate());
         console.log(v0, q0)
@@ -190,4 +190,4 @@ svg {
   fill: none;
   stroke: #eee;
 }
-</style>
+</style> -->
