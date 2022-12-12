@@ -1,16 +1,11 @@
 import { defineStore } from 'pinia';
 
-interface TimeRange {
-  start: string;
-  finish: string;
-  priority: number;
-}
-
 interface Session {
   username: string;
   station: string;
   sat_name: string;
-  session_list: TimeRange[];
+  start_time: string;
+  duration_sec: number;
 }
 
 export const useRegisterSessionStore = defineStore('register_session', {
@@ -18,6 +13,7 @@ export const useRegisterSessionStore = defineStore('register_session', {
     username: '',
     station: '',
     sat_name: '',
-    session_list: [],
+    start_time: '',
+    duration_sec: 0,
   }),
 });

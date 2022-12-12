@@ -1,33 +1,35 @@
 <template>
-  <q-table
-    class="available_sat_table"
-    title="List of active satellite"
-    style="height: 600px; min-width: 300px"
-    selection="single"
-    v-model:selected="selected"
-    :rows="rows"
-    :columns="columns"
-    row-key="name"
-    virtual-scroll
-    :rows-per-page-options="[0]"
-    :filter="filter"
-    no-data-label="I didn't find anything for you"
-    no-results-label="The filter didn't uncover any results"
-    @update:selected="
-      (val) =>
-        val.length > 0 ? (store.sat_name = val[0].name) : (store.sat_name = '')
-    "
-  >
-    <template v-slot:top-right>
-      <div class="col-3">
-        <q-input dense debounce="400" color="primary" v-model="filter">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </div>
-    </template>
-  </q-table>
+    <div class="q-gutter-md">
+        <q-table
+            class="available_sat_table"
+            title="List of active satellite"
+            style="height: 600px;"
+            selection="single"
+            v-model:selected="selected"
+            :rows="rows"
+            :columns="columns"
+            row-key="name"
+            virtual-scroll
+            :rows-per-page-options="[0]"
+            :filter="filter"
+            no-data-label="I didn't find anything for you"
+            no-results-label="The filter didn't uncover any results"
+            @update:selected="
+            (val) =>
+                val.length > 0 ? (store.sat_name = val[0].name) : (store.sat_name = '')
+            "
+        >
+            <template v-slot:top-right>
+                <div class="col-3">
+                    <q-input dense debounce="400" color="primary" v-model="filter">
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                    </q-input>
+                </div>
+            </template>
+        </q-table>
+    </div>
   <!-- <div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div> -->
 </template>
 
@@ -49,13 +51,13 @@ const columns = ref([
     format: (val) => `${val}`,
     sortable: true,
   },
-  {
-    name: 'OBJECT_ID',
-    align: 'center',
-    label: 'ID',
-    field: 'OBJECT_ID',
-    sortable: true,
-  },
+//   {
+//     name: 'OBJECT_ID',
+//     align: 'center',
+//     label: 'ID',
+//     field: 'OBJECT_ID',
+//     sortable: true,
+//   },
   {
     name: 'NORAD_CAT_ID',
     align: 'center',

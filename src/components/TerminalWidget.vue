@@ -47,7 +47,7 @@
 <script setup>
 import { ref } from 'vue';
 import { onMounted } from 'vue';
-
+import { keycloak } from 'src/boot/keycloak';
 var cmd_string = ref(''); // то, что вводит пользователь
 var history = ref([]);
 var histpos = ref(0);
@@ -86,26 +86,34 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  connection.value = new WebSocket(`wss://${process.env.API_URL}/websocket_api/ws`);
-  connection.value.onopen = function (event) {
-    console.log(event);
-    console.log('Successfully connected to the echo websocket server...');
-  };
-  connection.value.onmessage = function (event) {
-    output.value.insertAdjacentHTML(
-      'beforeEnd',
-      '<pre>' + '<div class="ls-files">' + event.data + '</div>' + '</pre>'
-    );
-    cmd_string.value = '';
-    input_cmd.value.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-      inline: 'nearest',
-    });
-  };
-  connection.value.onerror = function(error) {
-  console.log(error);
-};
+    keycloak
+    .loadUserInfo()
+    .then(function (profile) {
+        connection.value = new WebSocket(`ws://${process.env.API_URL}/websocket_api/ws/${profile.sub}`);
+        connection.value.onopen = function (event) {
+            console.log(event);
+            console.log('Successfully connected to the echo websocket server...');
+        };
+        connection.value.onmessage = function (event) {
+            output.value.insertAdjacentHTML(
+                'beforeEnd',
+                '<pre>' + '<div class="ls-files">' + event.data + '</div>' + '</pre>'
+            );
+            cmd_string.value = '';
+            input_cmd.value.scrollIntoView({
+                behavior: 'smooth',
+                block: 'end',
+                inline: 'nearest',
+            });
+        };
+        connection.value.onerror = function(error) {
+            console.log(error);
+        };
+        })
+        .catch(function () {
+        console.log('Failed to load user profile');
+        });
+
 });
 
 function send_ws(message) {

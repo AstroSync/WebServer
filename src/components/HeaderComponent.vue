@@ -119,6 +119,7 @@ import { useQuasar } from 'quasar';
 const store = useUserProfileStore();
 const toggle_model = ref(false);
 const username = ref('');
+const user_id = ref('');
 const $q = useQuasar();
 
 function Logout() {
@@ -128,12 +129,15 @@ onMounted(() => {
   keycloak
     .loadUserInfo()
     .then(function (profile) {
-      store.name = profile.given_name;
-      store.surname = profile.family_name;
-      store.email = profile.email;
-      store.email_verified = profile.email_verified;
-      store.username = profile.preferred_username;
-      username.value = profile.preferred_username;
+        console.log(profile)
+        store.user_id = profile.sub;
+        store.name = profile.given_name;
+        store.surname = profile.family_name;
+        store.email = profile.email;
+        store.email_verified = profile.email_verified;
+        store.username = profile.preferred_username;
+        username.value = profile.preferred_username;
+        user_id.value = profile.sub
     })
     .catch(function () {
       console.log('Failed to load user profile');
