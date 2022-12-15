@@ -2,8 +2,7 @@
   <div class="q-pa-md justify-center">
     <q-stepper
       v-model="step"
-      vertical
-
+      horizontal
       alternative-labels
       color="primary"
       animated
@@ -23,7 +22,7 @@
 
           <q-stepper-navigation>
             <q-btn
-              @click="step = 2"
+              @click="open_sessions_table"
               color="primary"
               label="Continue"
               :disable="store.sat_name === '' ? true : false"
@@ -34,7 +33,7 @@
       <q-step :name="2" title="Select sessions" icon="create_new_folder" :done="step > 2">
         <!-- An ad group contains one or more ads which target a shared set of
         keywords. -->
-        <sessions-table @onSelect="onSelect"/>
+        <sessions-table @onSelect="onSelect" ref="session_table"/>
         <q-stepper-navigation>
           <q-btn
             @click="updateScriptTable"
@@ -97,35 +96,43 @@ const store = useRegisterSessionStore();
 const scripts_meta = ref([]);
 const file_model = ref(null);
 const selected = ref([])
+const session_table = ref(null);
 const session_selected = ref([])
 const $q = useQuasar()
 function showNotif (val) {
-  $q.notify({
-    message: val ? 'Session successfully registered' : 'There is some isues with ground station server.',
-    color: val ? 'green' : 'red',
-    position: 'top'
-  })
+    $q.notify({
+        message: val ? 'Session successfully registered' : 'There is some isues with ground station server.',
+        color: val ? 'green' : 'red',
+        position: 'top'
+    })
+}
+function open_sessions_table() {
+    step.value = 2;
+    console.log(store)
+//   if (session_table.value !== undefined){
+    session_table.value.updateSessionTable();
+//   }
 }
 function uploadHandler() {
-  console.log(file_model.value);
-  console.log(selected.value[0].script_id)
-//   if (file_model.value != null) {
-//     var reader = new FileReader();
-//     reader.readAsText(file_model.value, 'UTF-8');
-//     reader.onload = function (evt) {
-//       register_session(evt.target.result);
-//     };
-//   }
-//   else {
-//     register_session('');
-//   }
+    console.log(file_model.value);
+    console.log(selected.value[0].script_id)
+    //   if (file_model.value != null) {
+    //     var reader = new FileReader();
+    //     reader.readAsText(file_model.value, 'UTF-8');
+    //     reader.onload = function (evt) {
+    //       register_session(evt.target.result);
+    //     };
+    //   }
+    //   else {
+    //     register_session('');
+    //   }
 
     register_session()
 
-  // let formData = new FormData();
-  // formData.append('sat_name', store.sat_name);
-  // formData.append('session_list', JSON.stringify(store.session_list));
-  // formData.append('file', file_model.value);
+    // let formData = new FormData();
+    // formData.append('sat_name', store.sat_name);
+    // formData.append('session_list', JSON.stringify(store.session_list));
+    // formData.append('file', file_model.value);
 }
 
 function updateScriptTable(){

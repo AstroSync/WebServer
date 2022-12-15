@@ -117,89 +117,89 @@ onMounted(() => {
 });
 
 function send_ws(message) {
-  connection.value.send(message);
+    connection.value.send(message);
 }
 
 function history_up() {
-  if (history.value.length) {
-    if (history.value[histpos.value]) {
-      history.value[histpos.value] = cmd_string.value;
-    } else {
-      histtemp.value = cmd_string.value;
+    if (history.value.length) {
+        if (history.value[histpos.value]) {
+            history.value[histpos.value] = cmd_string.value;
+        } else {
+         histtemp.value = cmd_string.value;
+        }
     }
-  }
-  // up 38
-  histpos.value--;
-  if (histpos.value < 0) {
-    histpos.value = 0;
-  }
-  cmd_string.value = history.value[histpos.value]
-    ? history.value[histpos.value]
-    : histtemp.value;
+    // up 38
+    histpos.value--;
+    if (histpos.value < 0) {
+        histpos.value = 0;
+    }
+    cmd_string.value = history.value[histpos.value]
+        ? history.value[histpos.value]
+        : histtemp.value;
 }
 
 function history_down() {
-  if (history.value.length) {
-    if (history.value[histpos.value]) {
-      history.value[histpos.value] = cmd_string.value;
-    } else {
-      histtemp.value = cmd_string.value;
+    if (history.value.length) {
+        if (history.value[histpos.value]) {
+        history.value[histpos.value] = cmd_string.value;
+        } else {
+        histtemp.value = cmd_string.value;
+        }
     }
-  }
-  histpos.value++;
-  if (histpos.value > history.value.length) {
-    histpos.value = history.value.length;
-  }
-  cmd_string.value = history.value[histpos.value]
-    ? history.value[histpos.value]
-    : histtemp.value;
+    histpos.value++;
+    if (histpos.value > history.value.length) {
+        histpos.value = history.value.length;
+    }
+    cmd_string.value = history.value[histpos.value]
+        ? history.value[histpos.value]
+        : histtemp.value;
 }
 
 function cmd_enter() {
-  if (cmd_string.value) {
-    history.value[history.value.length] = cmd_string.value;
-    histpos.value = history.value.length;
-  }
-  //   Duplicate current input and append to output section.
-  var line = input_cmd.value.parentNode.cloneNode(true);
-  line.removeAttribute('id');
-  line.classList.add('line');
-  var input = line.querySelector('input.cmdline');
-  input.autofocus = false;
-  input.readOnly = true;
-  output.value.appendChild(line);
+    if (cmd_string.value) {
+        history.value[history.value.length] = cmd_string.value;
+        histpos.value = history.value.length;
+    }
+    //   Duplicate current input and append to output section.
+    var line = input_cmd.value.parentNode.cloneNode(true);
+    line.removeAttribute('id');
+    line.classList.add('line');
+    var input = line.querySelector('input.cmdline');
+    input.autofocus = false;
+    input.readOnly = true;
+    output.value.appendChild(line);
 
-  send_ws(cmd_string.value);
+    send_ws(cmd_string.value);
 
-  if (cmd_string.value && cmd_string.value.trim()) {
-    var args = cmd_string.value.split(' ').filter(function (val) {
-      return val;
-    });
-    var cmd = args[0].toLowerCase();
-    args = args.splice(1); // Remove cmd from arg list.
-  }
-  if (cmd == 'clear') {
-    output.value.innerHTML = '';
-    cmd_string.value = '';
-  } else {
-    if (props.commands) {
-      props.commands.forEach((a) => {
-        if (cmd == a.name) {
-          add_to_output(a.get());
-          return;
+    if (cmd_string.value && cmd_string.value.trim()) {
+        var args = cmd_string.value.split(' ').filter(function (val) {
+            return val;
+        });
+        var cmd = args[0].toLowerCase();
+        args = args.splice(1); // Remove cmd from arg list.
+    }
+    if (cmd == 'clear') {
+        output.value.innerHTML = '';
+        cmd_string.value = '';
+    } else {
+        if (props.commands) {
+        props.commands.forEach((a) => {
+            if (cmd == a.name) {
+            add_to_output(a.get());
+            return;
+            }
+        });
         }
-      });
+        if (cmd_string.value.trim() != '') {
+        emit('shell_output', cmd_string.value);
+        }
+        cmd_string.value = '';
     }
-    if (cmd_string.value.trim() != '') {
-      emit('shell_output', cmd_string.value);
-    }
-    cmd_string.value = '';
-  }
 }
 
 function add_to_output(html) {
-  output.value.insertAdjacentHTML('beforeEnd', '<pre>' + html + '</pre>');
-  cmd_string.value = '';
+    output.value.insertAdjacentHTML('beforeEnd', '<div style="width:140px;overflow:auto">' + html + '</div>');
+    cmd_string.value = '';
 }
 </script>
 

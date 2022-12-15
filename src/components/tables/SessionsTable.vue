@@ -59,12 +59,10 @@
                     :options="
                         (d) =>
                         d >= date.formatDate(Date.now(), 'YYYY/MM/DD') &&
-                        d <=
-                            date.formatDate(
+                        d <= date.formatDate(
                             date.addToDate(Date.now(), { months: 1 }),
                             'YYYY/MM/DD'
-                            )
-                    "
+                            )"
                     >
                     </q-date>
                 </q-popup-proxy>
@@ -93,9 +91,9 @@ const date_format = ref('YYYY-MM-DD');
 // const date_format = ref('DD.MM.YYYY');
 
 onMounted(() => {
-  modelUpdated(date_model);
-  console.log(keycloak.token);
-  console.log(keycloak);
+    updateSessionTable()
+//   console.log(keycloak.token);
+    console.log(keycloak);
   // api_test
   //   .get('/protected', {
   //     headers: {
@@ -110,6 +108,13 @@ onMounted(() => {
   //     console.log('error');
   //   });
 });
+defineExpose({
+    updateSessionTable,
+});
+function updateSessionTable() {
+    selected.value = []
+    modelUpdated(date_model.value)
+}
 function modelUpdated(val) {
   if (val !== null) {
     var req_str = '';
@@ -118,10 +123,8 @@ function modelUpdated(val) {
     } else if (typeof val === 'object') {
       req_str = `/sessions?sat_name=${
         store.sat_name
-      }&start_date=${date.formatDate(
-        date_model.value.from,
-        'YYYY-MM-DD'
-      )}&end_date=${date.formatDate(date_model.value.to, 'YYYY-MM-DD')}`;
+      }&start_date=${date.formatDate(date_model.value.from,'YYYY-MM-DD')
+    }&end_date=${date.formatDate(date_model.value.to, 'YYYY-MM-DD')}`;
     }
     api
       .get(req_str)
