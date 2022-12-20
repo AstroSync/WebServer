@@ -89,7 +89,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-    connection.value = new WebSocket(`${process.env.SSL == 'http' ? 'ws' : 'wss'} ://${process.env.API_URL}/websocket_api/ws/${user.value.user_id}`);
+    connection.value = new WebSocket(`${process.env.SSL == 'http' ? 'ws' : 'wss'}://${process.env.API_URL}/websocket_api/ws/${user.value.user_id}`);
     connection.value.onopen = function (event) {
         console.log(event);
         console.log('Successfully connected to the echo websocket server...');

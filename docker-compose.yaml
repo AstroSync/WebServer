@@ -18,7 +18,7 @@ services:
 
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.frontend.rule=Host(`${DOMAIN?Variable not set}:${FRONTEND_PORT?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}:${FRONTEND_PORT?Variable not set}`)'
+      - 'traefik.http.routers.frontend.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)'
       - 'traefik.http.routers.frontend.entrypoints=https'
       - 'traefik.http.routers.frontend.tls.certresolver=letsEncrypt'
       - 'traefik.http.routers.frontend.tls=true'
@@ -36,7 +36,7 @@ services:
       - ./src:/frontend/src
 
   postgres:
-    image: postgres
+    image: postgres:latest
     container_name: postgres
     environment:
       POSTGRES_DB: ${POSTGRE_DB?Variable not set}
@@ -45,7 +45,7 @@ services:
     restart: always
 
   keycloak:
-    image: jboss/keycloak:16.1.0
+    image: jboss/keycloak:latest
     container_name: keycloak
     volumes:
       - ./realm-export.json:/opt/jboss/keycloak/imports/realm-export.json
@@ -61,9 +61,8 @@ services:
       KEYCLOAK_USER: ${KEYCLOAK_USER?Variable not set}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD?Variable not set}
       PROXY_ADDRESS_FORWARDING: 'true'
-      KEYCLOAK_LOGLEVEL: INFO
-    ports:
-      - '8085:8080'
+    # ports:
+    #   - '8085:8080'
     depends_on:
       - postgres
     restart: always
@@ -72,7 +71,7 @@ services:
       - 'traefik.http.routers.keycloak.rule=Host(`${AUTH_URL?Variable not set}`)'
       - 'traefik.http.routers.keycloak.service=keycloak'
       - 'traefik.http.routers.keycloak.entrypoints=https'
-      - 'traefik.http.services.keycloak.loadbalancer.server.port=8085'
+      - 'traefik.http.services.keycloak.loadbalancer.server.port=8080'
       - 'traefik.http.routers.keycloak.tls=true'
       - 'traefik.http.routers.keycloak.tls.certresolver=letsEncrypt'
       - 'traefik.http.services.keycloak.loadbalancer.passhostheader=true'
@@ -80,7 +79,7 @@ services:
       - 'traefik.http.middlewares.compresstraefik.compress=true'
 
   traefik:
-    image: traefik:v2.8
+    image: traefik:latest
     container_name: traefik
     restart: unless-stopped
     ports:
@@ -97,36 +96,37 @@ services:
 
     command:
       # - "--api.insecure=true"
-      - '--api.dashboard=true'
-      - '--api.debug=true'
-      - '--providers.docker=true'
-      - '--log.LEVEL=INFO'
-      - '--entryPoints.http.address=:80'
-      - '--entryPoints.https.address=:443'
-      # - '--entryPoints.smtp.address=:25'
-      # - '--entryPoints.smtp-ssl.address=:465'
-      # - '--entryPoints.imap-ssl.address=:993'
-      # - '--entryPoints.sieve.address=:4190'
-      - '--providers.docker.exposedbydefault=false'
-      - '--certificatesresolvers.letsEncrypt.acme.httpchallenge=true'
-      - '--certificatesresolvers.letsEncrypt.acme.httpchallenge.entrypoint=http'
-      - '--certificatesresolvers.letsEncrypt.acme.email=${TRAEFIC_EMAIL?Variable not set}'
-      - '--certificatesresolvers.letsEncrypt.acme.storage=acme.json'
+      - "--api.dashboard=true"
+      - "--api.debug=true"
+      - "--providers.docker=true"
+      - "--log.LEVEL=INFO"
+      - "--entryPoints.http.address=:80"
+      - "--entryPoints.https.address=:443"
+      # - "--entryPoints.smtp.address=:25"
+      # - "--entryPoints.smtp-ssl.address=:465"
+      # - "--entryPoints.imap-ssl.address=:993"
+      # - "--entryPoints.sieve.address=:4190"
+      - "--providers.docker.exposedbydefault=false"
+      - "--certificatesresolvers.letsEncrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsEncrypt.acme.httpchallenge.entrypoint=http"
+      - "--certificatesresolvers.letsEncrypt.acme.email=${TRAEFIC_EMAIL?Variable not set}"
+      - "--certificatesresolvers.letsEncrypt.acme.storage=acme.json"
 
     labels:
       # dashboard
-      - 'traefik.enable=true'
-      # - "traefik.docker.network=traefik-public"
-      - 'traefik.http.routers.traefik.entrypoints=https'
-      - 'traefik.http.routers.traefik.rule=Host(`${DASHBOARD_URL?Variable not set}`)'
-      - 'traefik.http.routers.traefik.tls=true'
-      - 'traefik.http.routers.traefik.tls.certresolver=letsEncrypt'
-      - 'traefik.http.routers.traefik.service=api@internal'
+      - "traefik.enable=true"
+      - "traefik.docker.network=webserver_default"
+      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.rule=Host(`${DASHBOARD_URL?Variable not set}`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.traefik.service=api@internal"
       # - "traefik.http.services.traefik-traefik.loadbalancer.server.port=888"
       # - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$CvFeOdaS$EIEsJ5YejQGZ5hmCQqKcz0"
       # - "traefik.http.routers.traefik.middlewares=traefik-auth"
 
-      - 'traefik.http.middlewares.https-redirect.redirectscheme.scheme=https'
-      - 'traefik.http.middlewares.https-redirect.redirectscheme.permanent=true'
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
-      - 'traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https'
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+
