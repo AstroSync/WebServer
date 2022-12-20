@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  frontend:
+    image: naku_frontend:latest
+    container_name: frontend
+    build:
+      context: ./
+      dockerfile: frontend.dockerfile
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME?Variable not set}
+      DOMAIN: ${DOMAIN?Variable not set}
+      API_URL: ${API_URL?Variable not set}
+      AUTH_URL: ${AUTH_URL?Variable not set}
+      REALM: ${REALM?Variable not set}
+      CLIENT_ID: ${CLIENT_ID?Variable not set}
+    ports:
+      - 8081:8081
+
+    volumes:
+      # - ./:/frontend
+      # - /frontend/node_modules
+      # - /frontend/package-lock.json
+      - ./src:/frontend/src
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRE_DB?Variable not set}
+      POSTGRES_USER: ${POSTGRE_DB_USER?Variable not set}
+      POSTGRES_PASSWORD: ${POSTGRE_DB_PASSWORD?Variable not set}
+    restart: always
+
+  keycloak:
+    image: jboss/keycloak:16.1.0
+    container_name: keycloak
+    volumes:
+      - ./realm-export.json:/opt/jboss/keycloak/imports/realm-export.json
+    command:
+      - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.import=/opt/jboss/keycloak/imports/realm-export.json'
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: ${POSTGRE_DB?Variable not set}
+      DB_USER: ${POSTGRE_DB_USER?Variable not set}
+      DB_SCHEMA: public
+      DB_PASSWORD: ${POSTGRE_DB_PASSWORD?Variable not set}
+      KEYCLOAK_USER: ${KEYCLOAK_USER?Variable not set}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD?Variable not set}
+      PROXY_ADDRESS_FORWARDING: 'true'
+      KEYCLOAK_LOGLEVEL: INFO
+    ports:
+      - '8085:8080'
+    depends_on:
+      - postgres
+    restart: always

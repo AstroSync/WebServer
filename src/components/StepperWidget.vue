@@ -69,7 +69,7 @@
         <scripts-table
             :scripts_meta="scripts_meta"
             :manage_buttons="false"
-            @onSelect="(sel) => selected = sel"
+            @onSelect="(sel) => script_selected = sel"
         />
         <q-stepper-navigation>
           <q-btn label="Finish" @click="uploadHandler" color="primary"/>
@@ -95,9 +95,10 @@ const user_store = useUserProfileStore();
 const store = useRegisterSessionStore();
 const scripts_meta = ref([]);
 const file_model = ref(null);
-const selected = ref([])
+const script_selected = ref([])
 const session_table = ref(null);
 const session_selected = ref([])
+const script_id = ref(null)
 const $q = useQuasar()
 function showNotif (val) {
     $q.notify({
@@ -115,7 +116,6 @@ function open_sessions_table() {
 }
 function uploadHandler() {
     console.log(file_model.value);
-    console.log(selected.value[0].script_id)
     //   if (file_model.value != null) {
     //     var reader = new FileReader();
     //     reader.readAsText(file_model.value, 'UTF-8');
@@ -148,18 +148,35 @@ function updateScriptTable(){
     })
 }
 function register_session() {
-    console.log(selected.value)
+    console.log(script_selected.value)
     console.log(store.sat_name)
+    if(Object.keys(script_selected.value).length > 0){
+        console.log('script selected')
+        console.log(script_selected.value)
+        script_id.value = script_selected.value[0].script_id
+    } else {
+        script_id.value = null
+    }
     api
-    .post('/schedule/register_sessions', [{
+    .post('/schedule/register_sessions',
+    session_selected.value.map((session) => ({
         user_id: user_store.user_id,
         username: user_store.username,
-        script_id: selected.value[0].script_id,
+        script_id: script_id.value,
         sat_name: store.sat_name,
         priority: 1,
-        start: new Date(session_selected.value[0].start_time.replace('\n', ' ')),
-        duration_sec: session_selected.value[0].duration_sec,
-    }],
+        start: new Date(session.start_time.replace('\n', ' ')),
+        duration_sec: session.duration_sec,
+    })),
+    // [{
+    //     user_id: user_store.user_id,
+    //     username: user_store.username,
+    //     script_id: script_id.value,
+    //     sat_name: store.sat_name,
+    //     priority: 1,
+    //     start: new Date(session_selected.value[0].start_time.replace('\n', ' ')),
+    //     duration_sec: session_selected.value[0].duration_sec,
+    // }],
     {
       headers: {
         'Content-Type': 'application/json',

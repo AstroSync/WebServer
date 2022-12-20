@@ -58,6 +58,10 @@ module.exports = configure(function (ctx) {
         CLIENT_ID: process.env.CLIENT_ID,
         API_URL: process.env.API_URL,
         AUTH_URL: process.env.AUTH_URL,
+        // REALM: 'Test',
+        // CLIENT_ID: 'test-client',
+        // API_URL: '10.6.1.97:8080',
+        // AUTH_URL: '10.6.1.97:8085',
       },
       // transpile: true,
       // transpileDependencies: [
@@ -92,7 +96,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-devServer
     devServer: {
-      // allowedHosts: 'all',
+      allowedHosts: 'all',
       // proxy: {
       //   "/app": {
       //     target: 'http://172.16.1.10:80',//'http://0.0.0.0:8080',

@@ -2,7 +2,8 @@
 
     <div @click="input_cmd.focus()" style="min-height: 350px;">
         <div ref="terminal" id="container">
-        <div style="overflow: auto" id="scroll_container">
+        <div style="overflow: auto; max-width: 600px; white-space: pre-line; word-wrap: break-all; overflow:auto"
+             id="scroll_container">
             <div style="height: 600px">
             <div v-if="banner" id="banner">
                 <p>
@@ -46,8 +47,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import { onMounted } from 'vue';
-import { keycloak } from 'src/boot/keycloak';
+import { onMounted, onUnmounted, computed } from 'vue';
+import { useUserProfileStore } from 'stores/user-profile-store';
+const store = useUserProfileStore();
+const user = computed(() => store)
 var cmd_string = ref(''); // то, что вводит пользователь
 var history = ref([]);
 var histpos = ref(0);
@@ -86,36 +89,31 @@ const props = defineProps({
 });
 
 onMounted(() => {
-    keycloak
-    .loadUserInfo()
-    .then(function (profile) {
-        connection.value = new WebSocket(`ws://${process.env.API_URL}/websocket_api/ws/${profile.sub}`);
-        connection.value.onopen = function (event) {
-            console.log(event);
-            console.log('Successfully connected to the echo websocket server...');
-        };
-        connection.value.onmessage = function (event) {
-            output.value.insertAdjacentHTML(
-                'beforeEnd',
-                '<pre>' + '<div class="ls-files">' + event.data + '</div>' + '</pre>'
-            );
-            cmd_string.value = '';
-            input_cmd.value.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end',
-                inline: 'nearest',
-            });
-        };
-        connection.value.onerror = function(error) {
-            console.log(error);
-        };
-        })
-        .catch(function () {
-        console.log('Failed to load user profile');
+    connection.value = new WebSocket(`ws://${process.env.API_URL}/websocket_api/ws/${user.value.user_id}`);
+    connection.value.onopen = function (event) {
+        console.log(event);
+        console.log('Successfully connected to the echo websocket server...');
+    };
+    connection.value.onmessage = function (event) {
+        output.value.insertAdjacentHTML(
+            'beforeEnd',
+            '<div class="ls-files" style="overflow:auto">' + event.data + '</div>'
+        );
+        cmd_string.value = '';
+        input_cmd.value.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest',
         });
+    };
+    connection.value.onerror = function(error) {
+        console.log(error);
+    };
 
 });
-
+onUnmounted(() => {
+    connection.value.close()
+});
 function send_ws(message) {
     connection.value.send(message);
 }
@@ -198,7 +196,7 @@ function cmd_enter() {
 }
 
 function add_to_output(html) {
-    output.value.insertAdjacentHTML('beforeEnd', '<div style="width:140px;overflow:auto">' + html + '</div>');
+    output.value.insertAdjacentHTML('beforeEnd', '<div style="white-space: pre-line; word-wrap: break-all; overflow:auto">' + html + '</div>');
     cmd_string.value = '';
 }
 </script>

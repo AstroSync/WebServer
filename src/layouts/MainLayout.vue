@@ -1,12 +1,12 @@
 <template>
   <q-layout view="hHh Lpr fFf" class="bg-grey-1">
-    <header-component @toggle-event="toggleLeftDrawer" />
+    <header-component @toggle-event="toggleLeftDrawer" ref="header_widget"/>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      mini-to-overlay
+
       class="bg-grey-2"
       :width="240"
     >
@@ -35,9 +35,9 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
-    
-    <q-page-container>
-      <router-view />
+
+    <q-page-container v-if="header_widget">
+      <router-view v-if="header_widget.user_ready"/>
     </q-page-container>
   </q-layout>
 </template>
@@ -48,6 +48,7 @@ import HeaderComponent from 'src/components/HeaderComponent.vue';
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const leftDrawerOpen = ref(false);
+const header_widget = ref(null)
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
@@ -69,4 +70,6 @@ const links2 = [
 ];
 </script>
 
-<style lang="sass"></style>
+<style lang="sass">
+
+</style>

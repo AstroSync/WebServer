@@ -17,21 +17,21 @@
             <template v-slot:body="props">
             <q-tr :props="props">
                 <q-td>
-                <q-checkbox v-model="props.selected" color="primary" />
+                    <q-checkbox v-model="props.selected" color="primary" />
                 </q-td>
                 <q-td key="status" :props="props">
-                <q-badge color="green">
-                    {{ props.row.status }}
-                </q-badge>
+                    <q-badge color="green">
+                        {{ props.row.status }}
+                    </q-badge>
                 </q-td>
                 <q-td auto-width key="start_time" :props="props" style="white-space: pre-line">
-                {{ props.row.start_time}}
+                    {{ props.row.start_time}}
                 </q-td>
                 <!-- <q-td key="finish_time" :props="props">
                 {{ props.row.finish_time }}
                 </q-td> -->
                 <q-td key="duration" :props="props">
-                {{ props.row.duration_sec }}
+                    {{ props.row.duration_sec }}
                 </q-td>
                 <!-- <q-td key="station" :props="props">
                 {{ props.row.station }}

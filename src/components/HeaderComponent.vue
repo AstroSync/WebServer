@@ -121,7 +121,10 @@ const toggle_model = ref(false);
 const username = ref('');
 const user_id = ref('');
 const $q = useQuasar();
-
+const user_ready = ref(false);
+defineExpose({
+    user_ready
+})
 function Logout() {
   keycloak.logout('/');
 }
@@ -138,6 +141,7 @@ onMounted(() => {
         store.username = profile.preferred_username;
         username.value = profile.preferred_username;
         user_id.value = profile.sub
+        user_ready.value = true
     })
     .catch(function () {
       console.log('Failed to load user profile');

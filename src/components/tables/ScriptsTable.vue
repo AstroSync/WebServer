@@ -18,12 +18,32 @@
                 <q-tr :props="props">
                     <q-th auto-width />
                     <q-th
-                        v-for="col in props.cols"
-                        :key="col.name"
+                        :key="props.cols[0].name"
                         :props="props"
                     >
-                        {{ col.label }}
+                        {{ props.cols[0].label }}
                     </q-th>
+                    <q-th
+                        :key="props.cols[1].name"
+                        :props="props"
+                    >
+                        {{ props.cols[1].label }}
+                    </q-th>
+                    <q-th
+                        v-if="table_props.extra_columns === true"
+                        :key="props.cols[2].name"
+                        :props="props"
+                    >
+                        {{ props.cols[2].label }}
+                    </q-th>
+                    <q-th
+                        v-if="table_props.extra_columns === true"
+                        :key="props.cols[3].name"
+                        :props="props"
+                    >
+                        {{ props.cols[3].label }}
+                    </q-th>
+                    <q-th auto-width />
                 </q-tr>
             </template>
             <template v-slot:body="props">
@@ -47,6 +67,26 @@
                             @click="props.expand = !props.expand"
                             :icon="props.expand ? 'remove' : 'add'"
                         />
+                    </q-td>
+
+                    <q-td
+                        v-show="table_props.extra_columns === true"
+                        :key="props.cols[2].name"
+                        :props="props"
+                        style="white-space: pre-line"
+                        auto-width
+                    >
+                        {{ props.cols[2].value }}
+                    </q-td>
+
+                    <q-td
+                        v-show="table_props.extra_columns === true"
+                        :key="props.cols[3].name"
+                        :props="props"
+                        style="white-space: pre-line"
+                        auto-width
+                    >
+                        {{ props.cols[3].value }}
                     </q-td>
 
                     <q-td auto-width v-show="table_props.manage_buttons == true">
@@ -82,7 +122,7 @@ import { ref, computed } from 'vue';
 import { matCloudDownload } from '@quasar/extras/material-icons';
 import { matDelete } from '@quasar/extras/material-icons';
 
-const table_props = defineProps(['scripts_meta', 'manage_buttons'])
+const table_props = defineProps(['scripts_meta', 'manage_buttons', 'extra_columns'])
 const filter = ref('');
 const selected = ref([]);
 const columns = ref([
@@ -100,6 +140,18 @@ const columns = ref([
             label: 'Description',
             field: 'description'
         },
+        {
+            name: 'upload_date',
+            align: 'left',
+            label: 'Creation date',
+            field: 'upload_date'
+        },
+        {
+            name: 'last_edited_date',
+            align: 'left',
+            label: 'Last edited date',
+            field: 'last_edited_date'
+        }
     ]);
 
 const rows = computed(() => table_props.scripts_meta);
