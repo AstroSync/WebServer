@@ -6,7 +6,9 @@ import axios from 'axios';
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: `http://${process.env.API_URL}` });
+const api = axios.create({
+  baseURL: `${process.env.SSL}://${process.env.API_URL}`,
+});
 // const api = axios.create({ baseURL: 'https://api.astrosync.ru' });
 
 export default boot(({ app }) => {

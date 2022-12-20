@@ -1,8 +1,8 @@
 version: '3.8'
 services:
   frontend:
-    image: naku_frontend:latest
-    container_name: frontend
+    image: astrosync_frontend:latest
+    container_name: astrosync_frontend
     build:
       context: ./
       dockerfile: frontend.dockerfile
@@ -13,6 +13,8 @@ services:
       AUTH_URL: ${AUTH_URL?Variable not set}
       REALM: ${REALM?Variable not set}
       CLIENT_ID: ${CLIENT_ID?Variable not set}
+      FRONTEND_PORT: ${FRONTEND_PORT?Variable not set}
+      SSL: ${SSL?Variable not set}
 
     labels:
       - 'traefik.enable=true'
@@ -25,7 +27,7 @@ services:
       - 'traefik.http.routers.frontend_redirect.entrypoints=http'
       - 'traefik.http.routers.frontend_redirect.middlewares=https-redirect'
 
-      - 'traefik.http.services.frontend_service.loadbalancer.server.port=80'
+      - 'traefik.http.services.frontend_service.loadbalancer.server.port=${FRONTEND_PORT?Variable not set}'
       # - "traefik.http.middlewares.sslheader_front.headers.customrequestheaders.X-Forwarded-Proto = https"
     volumes:
       # - ./:/frontend

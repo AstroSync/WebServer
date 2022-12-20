@@ -2,7 +2,7 @@ import { boot } from 'quasar/wrappers';
 import Keycloak from 'keycloak-js';
 
 const keycloak = Keycloak({
-  url: `http://${process.env.AUTH_URL}/auth`,
+  url: `${process.env.SSL}://${process.env.AUTH_URL}/auth`,
   realm: process.env.REALM,
   clientId: process.env.CLIENT_ID,
   //   url: 'http://localhost:8085/auth',
