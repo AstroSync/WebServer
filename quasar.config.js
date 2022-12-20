@@ -59,7 +59,7 @@ module.exports = configure(function (ctx) {
         API_URL: process.env.API_URL,
         AUTH_URL: process.env.AUTH_URL,
         DOMAIN: process.env.DOMAIN,
-        FRONTEND_PROT: process.env.FRONTEND_PROT,
+        FRONTEND_PORT: process.env.FRONTEND_PORT,
         SSL: process.env.SSL,
         // REALM: 'Test',
         // CLIENT_ID: 'test-client',
@@ -122,12 +122,12 @@ module.exports = configure(function (ctx) {
       },
       client: {
         webSocketTransport: 'ws',
-        webSocketURL: `ws://0.0.0.0:${process.env.FRONTEND_PROT}/ws`,
+        webSocketURL: 'ws://0.0.0.0:80/ws',
       },
       server: {
         type: 'http',
       },
-      port: process.env.FRONTEND_PROT,
+      port: process.env.FRONTEND_PORT,
       // open: true // opens browser window automatically
     },
 

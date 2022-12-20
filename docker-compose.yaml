@@ -18,7 +18,7 @@ services:
 
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.frontend.rule=Host(`${DOMAIN?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}`)'
+      - 'traefik.http.routers.frontend.rule=Host(`${DOMAIN?Variable not set}:${FRONTEND_PORT?Variable not set}`) || Host(`www.${DOMAIN?Variable not set}:${FRONTEND_PORT?Variable not set}`)'
       - 'traefik.http.routers.frontend.entrypoints=https'
       - 'traefik.http.routers.frontend.tls.certresolver=letsEncrypt'
       - 'traefik.http.routers.frontend.tls=true'
@@ -78,6 +78,7 @@ services:
       - 'traefik.http.services.keycloak.loadbalancer.passhostheader=true'
       - 'traefik.http.routers.keycloak.middlewares=compresstraefik'
       - 'traefik.http.middlewares.compresstraefik.compress=true'
+
   traefik:
     image: traefik:v2.8
     container_name: traefik
@@ -102,10 +103,10 @@ services:
       - '--log.LEVEL=INFO'
       - '--entryPoints.http.address=:80'
       - '--entryPoints.https.address=:443'
-      - '--entryPoints.smtp.address=:25'
-      - '--entryPoints.smtp-ssl.address=:465'
-      - '--entryPoints.imap-ssl.address=:993'
-      - '--entryPoints.sieve.address=:4190'
+      # - '--entryPoints.smtp.address=:25'
+      # - '--entryPoints.smtp-ssl.address=:465'
+      # - '--entryPoints.imap-ssl.address=:993'
+      # - '--entryPoints.sieve.address=:4190'
       - '--providers.docker.exposedbydefault=false'
       - '--certificatesresolvers.letsEncrypt.acme.httpchallenge=true'
       - '--certificatesresolvers.letsEncrypt.acme.httpchallenge.entrypoint=http'

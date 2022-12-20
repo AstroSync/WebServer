@@ -22,4 +22,4 @@ MONGO_DB_PORT=27017
 
 TRAEFIC_EMAIL=crinitusfeles@gmail.com
 DASHBOARD_URL=dashboard.localhost
-TRAEFIC_DASBOARD_CRED=admin:$$apr1$$vDSqkf.v$GTJdfgadfgagBiAFFnHTI2Ds1
+TRAEFIC_DASBOARD_CRED=admin:$$apr1$$vDSqkf.v$$GTJdfgadfgagBiAFFnHTI2Ds1
