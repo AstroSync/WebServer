@@ -1,5 +1,5 @@
 <template>
-  <q-header class="bg-white text-grey-8 q-py-xs" height-hint="58" reveal>
+  <q-header height-hint="58" reveal >
     <q-toolbar>
       <q-btn
         flat

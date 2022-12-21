@@ -1,13 +1,11 @@
 <template>
-  <q-layout view="hHh Lpr fFf" class="bg-grey-1">
+  <q-layout view="hHh Lpr fFf">
     <header-component @toggle-event="toggleLeftDrawer" ref="header_widget"/>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-
-      class="bg-grey-2"
       :width="240"
     >
       <q-scroll-area class="fit">
