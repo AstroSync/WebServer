@@ -77,7 +77,7 @@ api
     console.log(err);
   });
 </script>
-
+<!--
 <style lang="sass">
 .available_sat_table
   height: 310px
@@ -111,4 +111,4 @@ api
   td:first-child, th:first-child
     position: sticky
     left: 0
-</style>
+</style> -->

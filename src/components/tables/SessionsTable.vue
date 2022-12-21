@@ -1,7 +1,7 @@
 <template>
     <div class="q-gutter-md">
         <q-table
-            class="available_sat_table"
+
             :title="`Sessions for ${store.sat_name}`"
             style="height: 600px"
             :selected-rows-label="getSelectedString"
@@ -15,65 +15,65 @@
             @update:selected="$emit('onSelect', selected)"
         >
             <template v-slot:body="props">
-            <q-tr :props="props">
-                <q-td>
-                    <q-checkbox v-model="props.selected" color="primary" />
-                </q-td>
-                <q-td key="status" :props="props">
-                    <q-badge color="green">
-                        {{ props.row.status }}
-                    </q-badge>
-                </q-td>
-                <q-td auto-width key="start_time" :props="props" style="white-space: pre-line">
-                    {{ props.row.start_time}}
-                </q-td>
-                <!-- <q-td key="finish_time" :props="props">
-                {{ props.row.finish_time }}
-                </q-td> -->
-                <q-td key="duration" :props="props">
-                    {{ props.row.duration_sec }}
-                </q-td>
-                <!-- <q-td key="station" :props="props">
-                {{ props.row.station }}
-                </q-td> -->
-            </q-tr>
+                <q-tr :props="props">
+                    <q-td>
+                        <q-checkbox v-model="props.selected" color="primary" />
+                    </q-td>
+                    <q-td key="status" :props="props">
+                        <q-badge color="green">
+                            {{ props.row.status }}
+                        </q-badge>
+                    </q-td>
+                    <q-td auto-width key="start_time" :props="props" style="white-space: pre-line">
+                        {{ props.row.start_time}}
+                    </q-td>
+                    <!-- <q-td key="finish_time" :props="props">
+                    {{ props.row.finish_time }}
+                    </q-td> -->
+                    <q-td key="duration" :props="props">
+                        {{ props.row.duration_sec }}
+                    </q-td>
+                    <!-- <q-td key="station" :props="props">
+                    {{ props.row.station }}
+                    </q-td> -->
+                </q-tr>
             </template>
             <template v-slot:top-right>
-            <div class="q-gutter-md">
-                <q-field
-                filled
-                label="Search period"
-                stack-label
-                class="cursor-pointer"
-                bottom-slots
-                v-model="date_model"
-                :rules="[(val) => !!val || 'Field is required']"
-                >
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                    <q-date
+                <div class="q-gutter-md">
+                    <q-field
+                    filled
+                    label="Search period"
+                    stack-label
+                    class="cursor-pointer"
+                    bottom-slots
                     v-model="date_model"
-                    today-btn
-                    :mask="date_format"
-                    @update:model-value="modelUpdated"
-                    range
-                    :options="
-                        (d) =>
-                        d >= date.formatDate(Date.now(), 'YYYY/MM/DD') &&
-                        d <= date.formatDate(
-                            date.addToDate(Date.now(), { months: 1 }),
-                            'YYYY/MM/DD'
-                            )"
+                    :rules="[(val) => !!val || 'Field is required']"
                     >
-                    </q-date>
-                </q-popup-proxy>
-                <template v-slot:control>
-                    {{ date_string(date_model) }}
-                </template>
-                <template #append>
-                    <q-icon name="event" class="cursor-pointer"> </q-icon>
-                </template>
-                </q-field>
-            </div>
+                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                            <q-date
+                            v-model="date_model"
+                            today-btn
+                            :mask="date_format"
+                            @update:model-value="modelUpdated"
+                            range
+                            :options="
+                                (d) =>
+                                d >= date.formatDate(Date.now(), 'YYYY/MM/DD') &&
+                                d <= date.formatDate(
+                                    date.addToDate(Date.now(), { months: 1 }),
+                                    'YYYY/MM/DD'
+                                    )"
+                            >
+                            </q-date>
+                        </q-popup-proxy>
+                    <template v-slot:control>
+                        {{ date_string(date_model) }}
+                    </template>
+                    <template #append>
+                        <q-icon name="event" class="cursor-pointer"> </q-icon>
+                    </template>
+                    </q-field>
+                </div>
             </template>
         </q-table>
     </div>
@@ -204,7 +204,7 @@ const columns = ref([
 ]);
 </script>
 
-<style lang="sass">
+<!-- <style lang="sass">
 .available_sat_table
   height: 310px
 
@@ -237,4 +237,4 @@ const columns = ref([
   td:first-child, th:first-child
     position: sticky
     left: 0
-</style>
+</style> -->
