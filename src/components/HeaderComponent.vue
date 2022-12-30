@@ -29,6 +29,7 @@
           @click="$q.dark.set(toggle_model)"
           color="green"
           icon="battery"
+          label="Dark mode"
           v-if="$q.screen.gt.xs"
         />
         <q-btn v-if="$q.screen.gt.xs" dense flat>
